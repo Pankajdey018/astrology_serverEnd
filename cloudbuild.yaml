@@ -1,0 +1,14 @@
+steps:
+  # Install dependencies
+  - name: 'gcr.io/cloud-builders/npm'
+    args: ['install']
+
+  # Optional: run build script if needed
+  # - name: 'gcr.io/cloud-builders/npm'
+  #   args: ['run', 'build']
+
+  # Deploy to App Engine
+  - name: 'gcr.io/cloud-builders/gcloud'
+    args: ['app', 'deploy', '--quiet']
+
+timeout: 900s

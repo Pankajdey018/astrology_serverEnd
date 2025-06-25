@@ -1,4 +1,13 @@
 {
+  "name": "astro-backend",
+  "version": "1.0.0",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "cross-env SE_EPHE_PATH=./data/ephe nodemon app.js",
+    "build": "rmdir /s /q dist && mkdir dist && xcopy app.js dist /Y && xcopy Data dist\\Data /E /I /Y && xcopy controllers dist\\controllers /E /I /Y && xcopy middleware dist\\middleware /E /I /Y && xcopy Routes dist\\Routes /E /I /Y && xcopy Services dist\\Services /E /I /Y && xcopy Utils dist\\Utils /E /I /Y && copy package.json dist"
+  },
   "dependencies": {
     "astronomy-engine": "^2.1.19",
     "dotenv": "^16.5.0",
@@ -10,12 +19,10 @@
     "sweph": "^2.10.3-1",
     "swisseph-v2": "^1.0.4"
   },
-  "scripts": {
-    "start": "cross-env SE_EPHE_PATH=./data/ephe node app.js",
-    "dev": "cross-env SE_EPHE_PATH=./data/ephe nodemon app.js",
-    "build": "rmdir /s /q dist && mkdir dist && xcopy app.js dist /Y && xcopy Data dist\\Data /E /I /Y && xcopy controllers dist\\controllers /E /I /Y && xcopy middleware dist\\middleware /E /I /Y && xcopy Routes dist\\Routes /E /I /Y && xcopy Services dist\\Services /E /I /Y && xcopy Utils dist\\Utils /E /I /Y && copy package.json dist"
-  },
   "devDependencies": {
     "cross-env": "^7.0.3"
+  },
+  "engines": {
+    "node": ">=18"
   }
 }

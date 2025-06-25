@@ -5,7 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "cross-env SE_EPHE_PATH=./data/ephe nodemon app.js",
-    "build": "rmdir /s /q dist && mkdir dist && xcopy app.js dist /Y && xcopy Data dist\\Data /E /I /Y && xcopy controllers dist\\controllers /E /I /Y && xcopy middleware dist\\middleware /E /I /Y && xcopy Routes dist\\Routes /E /I /Y && xcopy Services dist\\Services /E /I /Y && xcopy Utils dist\\Utils /E /I /Y && copy package.json dist"
+    "build": "rm -rf dist && mkdir -p dist && cp app.js dist/ && cp -r Data dist/Data && cp -r controllers dist/controllers && cp -r middleware dist/middleware && cp -r Routes dist/Routes && cp -r Services dist/Services && cp -r Utils dist/Utils && cp package.json dist/"
   },
   "dependencies": {
     "astronomy-engine": "^2.1.19",

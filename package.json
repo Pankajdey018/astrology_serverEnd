@@ -5,6 +5,7 @@
   "scripts": {
     "start": "node app.js",
     "dev": "cross-env SE_EPHE_PATH=./data/ephe nodemon app.js",
+    "postinstall": "npm rebuild swisseph-v2",
     "build": "rm -rf dist && mkdir -p dist && cp app.js dist/ && cp -r Data dist/Data && cp -r controllers dist/controllers && cp -r middleware dist/middleware && cp -r Routes dist/Routes && cp -r Services dist/Services && cp -r Utils dist/Utils && cp package.json dist/ && npm rebuild swisseph-v2"
   },
   "dependencies": {

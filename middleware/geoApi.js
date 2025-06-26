@@ -3,17 +3,14 @@ const https = require("https");
 
 function getCoordinatesFromAPI(location) {
   return new Promise((resolve, reject) => {
-    const data = JSON.stringify({ location });
+    const apiKey = process.env.weatherApiKey;
+    const city = encodeURIComponent(location);
+    const url = `/data/2.5/weather?q=${city}&appid=${apiKey}`;
 
     const options = {
-      hostname: "json.freeastrologyapi.com",
-      path: "/geo-details",
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": process.env.astroApi,
-        "Content-Length": data.length,
-      },
+      hostname: "api.openweathermap.org",
+      path: url,
+      method: "GET",
     };
 
     const req = https.request(options, (res) => {
@@ -25,26 +22,18 @@ function getCoordinatesFromAPI(location) {
 
       res.on("end", () => {
         try {
-          const parsed = JSON.parse(body);
-          console.log("Parsed geo API response:", parsed);
+          const data = JSON.parse(body);
+          const lat = data?.coord?.lat;
+          const lon = data?.coord?.lon;
 
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            const firstMatch = parsed[0];
-            const lat = firstMatch.latitude;
-            const lon = firstMatch.longitude;
-
-            if (lat && lon) {
-              resolve({ lat, lon });
-            } else {
-              reject(
-                new Error("Latitude/Longitude not found in the first result.")
-              );
-            }
+          if (lat !== undefined && lon !== undefined) {
+            console.log(`Geo coordinates -> Latitude: ${lat}, Longitude: ${lon}`);
+            resolve({ lat, lon });
           } else {
-            reject(new Error("No valid location data in API response."));
+            reject(new Error("Latitude/Longitude not found in API response."));
           }
         } catch (err) {
-          reject(new Error("Failed to parse response from geo API"));
+          reject(new Error("Failed to parse response from weather API"));
         }
       });
     });
@@ -53,7 +42,6 @@ function getCoordinatesFromAPI(location) {
       reject(e);
     });
 
-    req.write(data);
     req.end();
   });
 }

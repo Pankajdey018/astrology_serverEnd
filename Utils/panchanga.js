@@ -21,7 +21,8 @@ const TITHIS = [
   "Dwadashi",
   "Trayodashi",
   "Chaturdashi",
-  "Purnima/Amavasya",
+  "Amavasya",
+  "Purnima",
 ];
 
 const Karanas = [
@@ -98,17 +99,30 @@ const NAKSHATRAS = [
   "Revati",
 ];
 
-async function getPanchanga(date, locationName = "Kolkata", lat = null, lon = null
+function getLunarMonthNameFromSun(sunLon, paksha) {
+  const months = [
+    "Chaitra", "Vaishakha", "Jyeshtha", "Ashadha",
+    "Shravana", "Bhadrapada", "Ashwin", "Kartik",
+    "Margashirsha", "Pausha", "Magha", "Phalguna"
+  ];
+  const index = Math.floor(sunLon / 30) % 12;
+  return paksha === "Krishna" ? months[(index + 11) % 12] : months[index];
+}
+
+async function getPanchanga(
+  date,
+  locationName = "Kolkata",
+  lat = null,
+  lon = null
 ) {
   try {
-    //const { lat, lon } = await getCoordinatesFromAPI(locationName);
     if (!lat || !lon) {
       const coords = await getCoordinatesFromAPI(locationName);
       lat = coords.lat;
       lon = coords.lon;
     }
-    const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
 
+    const weekday = date.toLocaleDateString("en-US", { weekday: "long" });
     const sunTimes = SunCalc.getTimes(date, lat, lon);
     const moonTimes = SunCalc.getMoonTimes(date, lat, lon);
     const sunrise = sunTimes.sunrise;
@@ -128,6 +142,9 @@ async function getPanchanga(date, locationName = "Kolkata", lat = null, lon = nu
     const tithiAngle = (moonLon - sunLon + 360) % 360;
     const tithiIndex = Math.floor(tithiAngle / 12);
     const tithi = TITHIS[tithiIndex % 15];
+
+    const paksha = tithiIndex < 15 ? "Shukla" : "Krishna";
+    const lunarMonth = getLunarMonthNameFromSun(sunLon, paksha); // crude approximation
 
     const karanaIndex = Math.floor((tithiAngle % 12) / 6);
     const karana =
@@ -156,6 +173,8 @@ async function getPanchanga(date, locationName = "Kolkata", lat = null, lon = nu
         ? moonTimes.set.toLocaleTimeString()
         : "No moonset",
       tithi,
+      paksha,
+      lunarMonth,
       karana,
       nakshatra,
       yoga,
@@ -174,5 +193,4 @@ async function getPanchanga(date, locationName = "Kolkata", lat = null, lon = nu
     return { error: err.message || "Failed to compute Panchanga." };
   }
 }
-
 module.exports = { getPanchanga };

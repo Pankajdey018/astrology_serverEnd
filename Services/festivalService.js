@@ -2,7 +2,7 @@ const axios = require('axios');
 const rules = require('../Utils/festival');
 
 async function getFestivalsForMonth(location, year, month) {
-  const res = await axios.get(`http://localhost:8080/api/calendar-month`, {
+  const res = await axios.get(`https://astrology-serverend-1.onrender.com/api/calendar-month`, {
     params: { location, year, month }
   });
 

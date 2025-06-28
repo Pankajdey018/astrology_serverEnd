@@ -16,6 +16,8 @@ const {
   fetchKundli
 } = require('../controllers/astroController');
 
+const {fetchCalendarForMonth} = require("../controllers/calendarController");
+
 
 // Define routes
 router.get('/sun', fetchSunPosition);
@@ -30,6 +32,6 @@ router.get('/gulika-kaal', fetchGulikaKaal);
 router.get('/choghadiya', fetchChoghadiya);
 router.get('/panchanga', fetchPanchanga);
 router.get('/kundli', fetchKundli);
-
+router.get('/calendar-month', fetchCalendarForMonth);
 
 module.exports = router;
